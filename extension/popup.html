@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { width: 220px; padding: 15px; font-family: sans-serif; background: #101010; color: white; }
+    h3 { margin-top: 0; font-size: 16px; color: #fff; }
+    .input-group { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
+    input { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; }
+    button { 
+      width: 100%; padding: 10px; background: #fff; color: #000; border: none; 
+      border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 5px;
+    }
+    button:hover { background: #ccc; }
+    .hint { font-size: 11px; color: #666; margin-top: 10px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h3>Threads Tool</h3>
+  <div class="input-group">
+    <label>Số Follower ảo (VD: 8.4K)</label>
+    <input type="text" id="followerCount" value="8.4K">
+  </div>
+  <button id="btnCapture">Chụp Profile Ngay</button>
+  <div class="hint">Mở Profile Threads trước khi bấm</div>
+  <script src="popup.js"></script>
+</body>
+</html>

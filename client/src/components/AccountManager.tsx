@@ -38,7 +38,9 @@ import {
   KeyboardArrowDown as ExpandMoreIcon,
   KeyboardArrowUp as ExpandLessIcon,
   Download as DownloadIcon,
+  Image as ImageIcon,
 } from '@mui/icons-material';
+import { toPng } from 'html-to-image';
 
 interface Account {
   id: number;
@@ -46,8 +48,160 @@ interface Account {
   password: string;
   twoFA: string;
   cookie: string;
-  newUsername: string; // New field
+  newUsername: string;
 }
+
+// Component giả lập giao diện Threads để chụp ảnh - Scale cho độ phân giải 3780x1890
+const ThreadsProfileMock = React.forwardRef<HTMLDivElement, { account: Account }>(({ account }, ref) => {
+  const displayName = account.newUsername || account.username;
+  const username = (account.newUsername || account.username).toLowerCase().replace(/\s+/g, '_');
+  
+  return (
+    <div 
+      id="threads-capture-area"
+      ref={ref}
+      style={{ 
+        width: '1890px', 
+        height: '945px',
+        backgroundColor: '#101010', 
+        color: 'white', 
+        padding: '100px 100px',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+        position: 'fixed',
+        left: '0',
+        top: '0',
+        zIndex: -1000,
+        opacity: 0.99,
+        display: 'flex',
+        flexDirection: 'column',
+        boxSizing: 'border-box'
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px' }}>
+        <div style={{ flex: 1 }}>
+          <h1 style={{ fontSize: '110px', fontWeight: '800', margin: '0 0 10px 0', letterSpacing: '-3px' }}>{displayName}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <span style={{ fontSize: '55px', color: 'white', fontWeight: '400' }}>{username}</span>
+            <div style={{ 
+              backgroundColor: '#1e1e1e', 
+              borderRadius: '50%', 
+              width: '50px', 
+              height: '50px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center'
+            }}>
+               <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="white" opacity="0.3"/>
+                <path d="M17.414 10.586a2 2 0 010 2.828l-5 5a2 2 0 01-2.828 0l-2-2a2 2 0 012.828-2.828L11 14.172l3.586-3.586a2 2 0 012.828 0z" fill="white"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        {/* Avatar tròn chuẩn Threads */}
+        <div style={{ 
+          width: '280px', 
+          height: '280px', 
+          borderRadius: '50%', 
+          backgroundColor: '#262626', 
+          overflow: 'hidden',
+          border: '2px solid #333',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+           <img 
+            src="/anh15.jpg" 
+            alt="avatar" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(e) => {
+              // Fallback nếu không tìm thấy file
+              (e.target as HTMLImageElement).style.display = 'none';
+              (e.target as any).parentNode.innerHTML = '<div style="font-size: 150px">👤</div>';
+            }}
+           />
+        </div>
+      </div>
+
+      {/* Bio 3 dòng như ảnh mẫu */}
+      <div style={{ fontSize: '52px', lineHeight: '1.3', marginBottom: '40px', fontWeight: '400', color: '#f5f5f5', whiteSpace: 'pre-wrap' }}>
+        {displayName} - Trading Journey{'\n'}
+        Knowledge is Power - Discipline is Key{'\n'}
+        Master the Market, Master your Life
+      </div>
+
+      <div style={{ position: 'relative', display: 'inline-block', alignSelf: 'flex-start', marginBottom: '60px' }}>
+        <span style={{ fontSize: '55px', fontWeight: '700', color: 'white' }}>t.me/{username}</span>
+        
+        {/* Vòng tròn elip đỏ */}
+        <div style={{ 
+          position: 'absolute', 
+          top: '-15px', 
+          left: '-30px', 
+          right: '-30px', 
+          bottom: '-15px', 
+          border: '10px solid #ff3b30', 
+          borderRadius: '150px / 80px', 
+          transform: 'rotate(-1.5deg)',
+          pointerEvents: 'none'
+        }} />
+        
+        {/* Icon bàn tay chỉ vào */}
+        <div style={{ 
+          position: 'absolute', 
+          right: '-180px', 
+          top: '-10px', 
+          fontSize: '130px', 
+          transform: 'rotate(-15deg)' 
+        }}>
+          ☝️
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+        <span style={{ fontSize: '50px', color: '#777', fontWeight: '500' }}>8.4K followers</span>
+        
+        {/* Cập nhật Icon Bar Chart và Instagram chuẩn Screenshot 1 */}
+        <div style={{ display: 'flex', gap: '30px' }}>
+          {/* Icon Bar Chart trong khung tròn */}
+          <div style={{ 
+            width: '85px', 
+            height: '85px', 
+            border: '5px solid white', 
+            borderRadius: '24px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center' 
+          }}>
+            <svg width="45" height="45" viewBox="0 0 24 24" fill="white">
+              <rect x="4" y="14" width="3" height="6" rx="1" />
+              <rect x="10.5" y="4" width="3" height="16" rx="1" />
+              <rect x="17" y="10" width="3" height="10" rx="1" />
+            </svg>
+          </div>
+          
+          {/* Icon Instagram trong khung tròn */}
+          <div style={{ 
+            width: '85px', 
+            height: '85px', 
+            border: '5px solid white', 
+            borderRadius: '24px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center' 
+          }}>
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="6" ry="6"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
 
 const AccountManager = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -56,6 +210,8 @@ const AccountManager = () => {
   const [showBatchInput, setShowBatchInput] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mockRef = useRef<HTMLDivElement>(null);
+  const [activeAccount, setActiveAccount] = useState<Account | null>(null);
 
   const handleExport = () => {
     if (accounts.length === 0) {
@@ -66,7 +222,7 @@ const AccountManager = () => {
     let content = 'Tài khoản\n';
     accounts.forEach((acc) => {
       content += `${acc.username}|${acc.password}|${acc.twoFA}|${acc.cookie}\n`;
-      content += `New UN: ${acc.newUsername || 'N/A'}\n\n\n`; // Two empty lines after New UN line
+      content += `New UN: ${acc.newUsername || 'N/A'}\n\n\n`;
     });
 
     const blob = new Blob([content], { type: 'text/plain' });
@@ -138,6 +294,37 @@ const AccountManager = () => {
     ));
   };
 
+  const downloadImage = async (account: Account) => {
+    setActiveAccount(account);
+    
+    // Đợi 300ms để đảm bảo DOM đã render xong và font chữ đã load
+    setTimeout(async () => {
+      const element = document.getElementById('threads-capture-area');
+      if (element) {
+        try {
+          const dataUrl = await toPng(element, { 
+            cacheBust: true,
+            pixelRatio: 2, // 1890 * 2 = 3780px wide
+            backgroundColor: '#101010',
+            width: 1890,
+            height: 945
+          });
+          
+          const link = document.createElement('a');
+          link.download = `threads_${account.newUsername || account.username}_3780x1890.png`;
+          link.href = dataUrl;
+          link.click();
+          showSnackbar(`Đã tải ảnh chất lượng cao cho ${account.username}`, 'success');
+        } catch (err) {
+          showSnackbar('Lỗi khi tạo ảnh!', 'error');
+          console.error('Capture error:', err);
+        }
+      } else {
+        showSnackbar('Không tìm thấy vùng chụp ảnh!', 'error');
+      }
+    }, 300);
+  };
+
   const showSnackbar = (message: string, severity: 'success' | 'error') => {
     setSnackbar({ open: true, message, severity });
   };
@@ -166,6 +353,9 @@ const AccountManager = () => {
 
   return (
     <Box sx={{ pb: 4 }}>
+      {/* Component ẩn dùng để chụp ảnh */}
+      {activeAccount && <ThreadsProfileMock ref={mockRef} account={activeAccount} />}
+
       <Card elevation={0} sx={{ borderRadius: 4, border: '1px solid', borderColor: 'divider', mb: 3 }}>
         <CardContent sx={{ p: 4 }}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="space-between">
@@ -316,6 +506,7 @@ const AccountManager = () => {
                         <span>New User Name</span>
                       </Stack>
                     </TableCell>
+                    <TableCell width={150} sx={{ fontWeight: 700, px: 2 }}>Action</TableCell>
                     <TableCell width={180} sx={{ fontWeight: 700, px: 2 }}>Mật khẩu</TableCell>
                     <TableCell width={300} sx={{ fontWeight: 700, px: 2 }}>2FA Secret</TableCell>
                     <TableCell width={660} sx={{ fontWeight: 700, px: 2 }}>Cookie</TableCell>
@@ -356,6 +547,23 @@ const AccountManager = () => {
                           )
                         }}
                       />
+                    </TableCell>
+                    <TableCell sx={{ px: 2 }}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        startIcon={<ImageIcon />}
+                        onClick={() => downloadImage(acc)}
+                        sx={{ 
+                          borderRadius: 2, 
+                          textTransform: 'none', 
+                          fontSize: '0.75rem',
+                          bgcolor: 'info.main',
+                          '&:hover': { bgcolor: 'info.dark' }
+                        }}
+                      >
+                        Tải Ảnh
+                      </Button>
                     </TableCell>
                     <TableCell sx={{ px: 2 }}>
                       <Stack direction="row" spacing={1} alignItems="center">

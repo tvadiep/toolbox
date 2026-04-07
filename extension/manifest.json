@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Threads Profile Auto Capture",
+  "version": "1.0",
+  "description": "Tự động fake follower, vẽ vòng tròn link và chụp ảnh profile Threads",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.threads.net/*", "https://www.threads.com/*"],
+      "js": ["lib/html2canvas.min.js", "content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["hand.png"],
+      "matches": ["https://www.threads.net/*", "https://www.threads.com/*"]
+    }
+  ]
+}
