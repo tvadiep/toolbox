@@ -38,10 +38,10 @@ const tools = [
   },
   {
     id: 'threads-oauth',
-    title: 'Threads OAuth',
-    description: 'Generate and manage authorization links for Threads API with persistent Client ID.',
+    title: 'Threads OAuth Generator',
+    description: 'Generate authorization links for Threads API with persistent Client ID storage.',
     icon: <HashIcon />,
-    color: '#000000',
+    color: '#9c27b0',
     path: '/threads-oauth',
     status: 'Ready'
   },
