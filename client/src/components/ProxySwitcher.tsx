@@ -53,7 +53,7 @@ const ProxySwitcher = () => {
   const [key, setKey] = useState<string>(localStorage.getItem('proxy_key') || '');
   const [showKey, setShowKey] = useState(false);
   const [nhamang, setNhamang] = useState<string>('viettel');
-  const [tinhthanh, setTinhthanh] = useState<string>('2');
+  const [tinhthanh, setTinhthanh] = useState<string>('0');
   const [loading, setLoading] = useState<boolean>(false);
   const [proxyData, setProxyData] = useState<ProxyResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -187,13 +187,38 @@ const ProxySwitcher = () => {
                   onChange={(e) => setTinhthanh(e.target.value)}
                   sx={{ minWidth: 200 }}
                 >
-                  <MenuItem value="0">Ngẫu nhiên</MenuItem>
-                  <MenuItem value="1">Hà Nội</MenuItem>
-                  <MenuItem value="2">Hồ Chí Minh</MenuItem>
-                  <MenuItem value="3">Đà Nẵng</MenuItem>
-                  <MenuItem value="4">Hải Phòng</MenuItem>
-                  <MenuItem value="5">Cần Thơ</MenuItem>
-                  <MenuItem value="6">Bắc Ninh</MenuItem>
+                  <MenuItem value="0">0. Ngẫu nhiên</MenuItem>
+                  <MenuItem value="1">1. Phú Thọ</MenuItem>
+                  <MenuItem value="2">2. Tuyên Quang</MenuItem>
+                  <MenuItem value="3">3. Hà Nội</MenuItem>
+                  <MenuItem value="4">4. Hải Dương</MenuItem>
+                  <MenuItem value="5">5. Bắc Giang</MenuItem>
+                  <MenuItem value="6">6. Hồ Chí Minh</MenuItem>
+                  <MenuItem value="7">7. Tây Ninh</MenuItem>
+                  <MenuItem value="8">8. Đồng Nai</MenuItem>
+                  <MenuItem value="9">9. Vũng Tàu</MenuItem>
+                  <MenuItem value="10">10. Bình Dương</MenuItem>
+                  <MenuItem value="11">11. Nghệ An</MenuItem>
+                  <MenuItem value="12">12. Hà Tĩnh</MenuItem>
+                  <MenuItem value="13">13. Quảng Bình</MenuItem>
+                  <MenuItem value="14">14. Quảng Trị</MenuItem>
+                  <MenuItem value="15">15. Huế</MenuItem>
+                  <MenuItem value="16">16. Đà Nẵng</MenuItem>
+                  <MenuItem value="17">17. Vĩnh Phúc</MenuItem>
+                  <MenuItem value="18">18. Yên Bái</MenuItem>
+                  <MenuItem value="19">19. Lào Cai</MenuItem>
+                  <MenuItem value="20">20. Lạng Sơn</MenuItem>
+                  <MenuItem value="21">21. Thái Nguyên</MenuItem>
+                  <MenuItem value="22">22. Hà Nam</MenuItem>
+                  <MenuItem value="23">23. Nam Định</MenuItem>
+                  <MenuItem value="24">24. Thái Bình</MenuItem>
+                  <MenuItem value="25">25. Hải Phòng</MenuItem>
+                  <MenuItem value="26">26. Quảng Ninh</MenuItem>
+                  <MenuItem value="27">27. Cà Mau</MenuItem>
+                  <MenuItem value="28">28. Kiên Giang</MenuItem>
+                  <MenuItem value="29">29. Bạc Liêu</MenuItem>
+                  <MenuItem value="30">30. Sóc Trăng</MenuItem>
+                  <MenuItem value="31">31. Hậu Giang</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
