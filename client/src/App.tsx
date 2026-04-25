@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from
 import ProxySwitcher from './components/ProxySwitcher'
 import AccountManager from './components/AccountManager'
 import ThreadsOAuth from './components/ThreadsOAuth'
+import ImageScraper from './components/ImageScraper'
+import TelegramLinkGen from './components/TelegramLinkGen'
 import Dashboard from './components/Dashboard'
 import { 
   ThemeProvider, 
@@ -111,7 +113,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </Container>
       </AppBar>
 
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 6, flexGrow: 1 }}>
+      <Container maxWidth="xl" sx={{ mt: 4, mb: 6, flexGrow: 1 }}>
         {!isHome && (
           <Breadcrumbs sx={{ mb: 3 }}>
             <MuiLink 
@@ -167,6 +169,8 @@ function App() {
             <Route path="/proxy-switcher" element={<ProxySwitcher />} />
             <Route path="/account-manager" element={<AccountManager />} />
             <Route path="/threads-oauth" element={<ThreadsOAuth />} />
+            <Route path="/image-scraper" element={<ImageScraper />} />
+            <Route path="/telegram-link-gen" element={<TelegramLinkGen />} />
             {/* Future tools can be added here */}
           </Routes>
         </Layout>

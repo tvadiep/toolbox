@@ -23,6 +23,8 @@ import {
   TextField,
   InputAdornment,
   Collapse,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import {
   CloudUpload as UploadIcon,
@@ -38,6 +40,7 @@ import {
   KeyboardArrowDown as ExpandMoreIcon,
   KeyboardArrowUp as ExpandLessIcon,
   Download as DownloadIcon,
+  Email as EmailIcon,
 } from '@mui/icons-material';
 
 interface Account {
@@ -47,6 +50,8 @@ interface Account {
   twoFA: string;
   cookie: string;
   newUsername: string;
+  email: string;
+  emailPassword: string;
 }
 
 const AccountManager = () => {
@@ -54,6 +59,7 @@ const AccountManager = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [batchUsernames, setBatchUsernames] = useState('');
   const [showBatchInput, setShowBatchInput] = useState(false);
+  const [showEmail, setShowEmail] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -65,7 +71,11 @@ const AccountManager = () => {
 
     let content = 'Tài khoản\n';
     accounts.forEach((acc) => {
-      content += `${acc.username}|${acc.password}|${acc.twoFA}|${acc.cookie}\n`;
+      let line = `${acc.username}|${acc.password}|${acc.twoFA}|${acc.cookie}`;
+      if (acc.email) {
+        line += `|no_proxy|${acc.email}${acc.emailPassword ? `|${acc.emailPassword}` : ''}`;
+      }
+      content += line + '\n';
       content += `New UN: ${acc.newUsername || 'N/A'}\n\n\n`;
     });
 
@@ -90,20 +100,42 @@ const AccountManager = () => {
       const content = e.target?.result as string;
       const lines = content.split(/\r?\n/);
       const parsedAccounts: Account[] = [];
+      let currentAccount: Account | null = null;
 
       lines.forEach((line) => {
-        if (line.trim() === '' || line.toLowerCase().includes('tài khoản')) return;
+        const trimmedLine = line.trim();
+        if (trimmedLine === '' || trimmedLine.toLowerCase().includes('tài khoản')) return;
 
-        const parts = line.split('|');
+        // Check if the line is a "New UN:" line
+        if (trimmedLine.startsWith('New UN:')) {
+          if (currentAccount) {
+            const newUN = trimmedLine.replace('New UN:', '').trim();
+            currentAccount.newUsername = (newUN === 'N/A' || !newUN) ? '' : newUN;
+          }
+          return;
+        }
+
+        const parts = trimmedLine.split('|');
         if (parts.length >= 3) {
-          parsedAccounts.push({
+          // Detect format
+          // Format 1: User|Pass|2FA|Cookie (4 parts)
+          // Format 2: User|Pass|UA|Cookie|Proxy|Email|EmailPass (6 or 7 parts)
+          const isNewFormat = parts.length >= 6;
+          
+          const parsedAcc: Account = {
             id: parsedAccounts.length + 1,
             username: parts[0]?.trim() || '',
             password: parts[1]?.trim() || '',
-            twoFA: parts[2]?.trim() || '',
-            cookie: parts[3]?.trim() || '',
+            twoFA: isNewFormat ? '' : (parts[2]?.trim() || ''),
+            cookie: isNewFormat ? (parts[3]?.trim() || '') : (parts[3]?.trim() || ''),
+            email: isNewFormat ? (parts[5]?.trim() || '') : '',
+            emailPassword: (isNewFormat && parts.length >= 7) ? (parts[6]?.trim() || '') : '',
             newUsername: '',
-          });
+          };
+          
+          console.log('Parsed Account:', parsedAcc);
+          currentAccount = parsedAcc;
+          parsedAccounts.push(currentAccount);
         }
       });
 
@@ -252,6 +284,16 @@ const AccountManager = () => {
                 />
                 
                 <Stack direction="row" spacing={2} alignItems="center">
+                  <FormControlLabel
+                    control={
+                      <Switch 
+                        checked={showEmail} 
+                        onChange={(e) => setShowEmail(e.target.checked)} 
+                        color="primary"
+                      />
+                    }
+                    label={<Typography variant="body2" fontWeight="600">Show Email</Typography>}
+                  />
                   <Button
                     variant="outlined"
                     startIcon={showBatchInput ? <ExpandLessIcon /> : <BatchIcon />}
@@ -317,6 +359,22 @@ const AccountManager = () => {
                       </Stack>
                     </TableCell>
                     <TableCell width={180} sx={{ fontWeight: 700, px: 2 }}>Mật khẩu</TableCell>
+                    {showEmail && (
+                      <>
+                        <TableCell width={250} sx={{ fontWeight: 700, px: 2 }}>
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            <EmailIcon fontSize="small" />
+                            <span>Email</span>
+                          </Stack>
+                        </TableCell>
+                        <TableCell width={200} sx={{ fontWeight: 700, px: 2 }}>
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            <PasswordIcon fontSize="small" />
+                            <span>Mật khẩu Email</span>
+                          </Stack>
+                        </TableCell>
+                      </>
+                    )}
                     <TableCell width={300} sx={{ fontWeight: 700, px: 2 }}>2FA Secret</TableCell>
                     <TableCell width={660} sx={{ fontWeight: 700, px: 2 }}>Cookie</TableCell>
                   </TableRow>
@@ -368,6 +426,32 @@ const AccountManager = () => {
                         </Tooltip>
                       </Stack>
                     </TableCell>
+                    {showEmail && (
+                      <>
+                        <TableCell sx={{ px: 2 }}>
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            <EmailIcon fontSize="small" color="action" />
+                            <Typography variant="body2" noWrap sx={{ maxWidth: 200 }}>{acc.email}</Typography>
+                            <Tooltip title="Copy Email">
+                              <IconButton size="small" onClick={() => copyToClipboard(acc.email, 'Email')}>
+                                <CopyIcon fontSize="inherit" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                        <TableCell sx={{ px: 2 }}>
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            <PasswordIcon fontSize="small" color="action" />
+                            <Typography variant="body2" noWrap sx={{ maxWidth: 150, fontFamily: 'monospace' }}>{acc.emailPassword}</Typography>
+                            <Tooltip title="Copy Pass Email">
+                              <IconButton size="small" onClick={() => copyToClipboard(acc.emailPassword, 'Mật khẩu Email')}>
+                                <CopyIcon fontSize="inherit" />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </>
+                    )}
                     <TableCell sx={{ px: 2 }}>
                       <Stack direction="row" spacing={1} alignItems="center">
                         <TwoFAIcon fontSize="small" color="action" />

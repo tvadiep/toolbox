@@ -13,7 +13,9 @@ import {
   Code as CodeIcon,
   Transform as Base64Icon,
   Security as HashIcon,
-  ChevronRight as ArrowIcon
+  ChevronRight as ArrowIcon,
+  Collections as GalleryIcon,
+  Telegram as TelegramIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,6 +36,24 @@ const tools = [
     icon: <CodeIcon />,
     color: '#2e7d32',
     path: '/account-manager',
+    status: 'Ready'
+  },
+  {
+    id: 'image-scraper',
+    title: 'Image Scraper',
+    description: 'Scrape high-quality images from Google based on your search query.',
+    icon: <GalleryIcon />,
+    color: '#ed6c02',
+    path: '/image-scraper',
+    status: 'Ready'
+  },
+  {
+    id: 'telegram-link-gen',
+    title: 'Telegram Link Generator',
+    description: 'Bulk create Telegram invite links with custom names for user tracking.',
+    icon: <TelegramIcon />,
+    color: '#0088cc',
+    path: '/telegram-link-gen',
     status: 'Ready'
   },
   {
